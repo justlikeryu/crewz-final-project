@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/mypage/mypage.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+</head>
+<body>
+
+<header>
+    <div class="container text-center">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-6">
+                <a href="/">
+                    <img src="/logo.png" style="width: 150px;height: 75px;">
+                </a>
+                마이페이지
+            </div>
+            <div class="col"></div>
+            <div class="col"></div>
+        </div>
+    </div>
+</header>
+<hr/>
+<div class="row" style="height:5vh;"></div>
+<div class="row">
+    <div class="col-1"></div>
+
+    <div class="col-3" style="padding: 0;">
+        <ul class="nav nav-pills flex-column mb-3" id="menu" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="menu-myinfo" data-bs-toggle="pill" data-bs-target="#content-myinfo"
+                        type="button" role="tab" aria-controls="content-myinfo" aria-selected="true"><i
+                        class="fa-solid fa-circle-info"></i>회원정보
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="menu-mygroup" data-bs-toggle="pill" data-bs-target="#content-mygroup"
+                        type="button" role="tab" aria-controls="content-mygroup" aria-selected="false"><i
+                        class="fa-solid fa-user-group"></i>나의모임
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="menu-likegroup" data-bs-toggle="pill" data-bs-target="#content-likegroup"
+                        type="button" role="tab" aria-controls="content-likegroup" aria-selected="false"><i
+                        class="fa-solid fa-heart"></i>찜한모임
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="menu-partingroup" data-bs-toggle="pill"
+                        data-bs-target="#content-partingroup" type="button" role="tab"
+                        aria-controls="content-partingroup" aria-selected="false"><i class="fa-solid fa-handshake"></i>참가모임
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="menu-delete" data-bs-toggle="pill" data-bs-target="#content-delete"
+                        type="button" role="tab" aria-controls="content-delete" aria-selected="false"><i
+                        class="fa-solid fa-user-xmark"></i>회원탈퇴
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <!--    회원정보-->
+    <div class="tab-content col-7" id="pills-tabContent" style="padding: 0">
+        <div class="tab-pane fade show active" id="content-myinfo" role="tabpanel" aria-labelledby="menu-myinfo"
+             tabindex="0">
+            <div class="row">
+                <div class="col-1" id="profile" style="padding: 0">
+                    <form action="/profile" method="post" enctype="multipart/form-data" id="profile-form">
+                        <div id="profile-container">
+                            <div th:if="${m.photo != 'null'}">
+                                <img id="profile-img" th:src="@{/profile/read(id=${m.id}, photo=${m.photo})}"/>
+                            </div>
+                            <div th:unless="${m.photo != 'null'}">
+                                <img id="profile-img" th:src="@{/profile/read(id=${m.id}, photo='zero')}"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div style="text-align: center;">
+                            <label for="profile-upload" id="profile-upload-label">변경</label>
+                            <input type="file" id="profile-upload" name="photo" style="display: none"
+                                   accept="image/jpg, image/jpeg, image/png">
+                            <input id="profile-id" type="hidden" name="id" value="">
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-6" style="padding: 0">
+                    <form action="/member/edit" method="post">
+                        <input type="hidden" name="site" value="null">
+                        <table>
+                            <tr>
+                                <th>이름</th>
+                                <td><input type="text" class="form-control" th:value="${m.name}" name="name" th:readonly="true"></td>
+                            </tr>
+                            <tr>
+                                <th>아이디</th>
+                                <td><input type="text" class="form-control" th:value="${m.id}" name="id" id="id" th:readonly="true"></td>
+                            </tr>
+                            <tr>
+                                <th style="vertical-align: top;">비밀번호</th>
+                                <td><input type="password" class="form-control" name="pwd" id="pwd" th:value="${m.pwd}"
+                                           th:readonly="true"><br/>
+                                    <input type="password" class="form-control" name="pwdNew1" id="pwdNew1" placeholder="새로운 비밀번호" onchange="changePwd()"><br/>
+                                    <input type="password" class="form-control" name="pwdNew2" id="pwdNew2" onchange="changePwd()" placeholder="새로운 비밀번호 확인">
+                                    <label for="pwdNew1" id="pwdStatus" style="font-size: 10px;">영어, 숫자, 특수문자(8~16자)를 포함해주세요.</label>
+                                    <label for="pwdNew2" id="pwdStatusFail" style="font-size: 10px">비밀번호가 일치하지 않습니다.</label>
+                                    <label for="pwdNew2" id="pwdStatusSuccess" style="font-size: 10px">비밀번호가 일치합니다.</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>생년월일</th>
+                                <td><input type="date" class="form-control" name="birth" th:value="${m.birth}"
+                                           th:readonly="true">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>전화번호</th>
+                                <td>
+                                    <input type="text" class="form-control" name="tel" id="tel" th:value="${m.tel}" oninput="changeTel()">
+                                    <label for="tel" id="telStatus" style="margin-top:4px; font-size: 10px">01012345678 형식으로 입력해 주세요.</label>
+                                </td>
+
+                                <td>
+                                    <button type="submit" id="submitBtn" class="btn btn-danger">변경</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--        회원탈퇴-->
+        <div class="tab-pane fade" id="content-delete" role="tabpanel" aria-labelledby="menu-delete" tabindex="0">
+            <div class="col-7">
+                <p style="font-weight: bold;font-size: 36px;">회원 탈퇴</p>
+                <div class="row">
+                    <h6 style="font-weight: bold">아이디 재사용 및 복구 불가</h6>
+                    <p>탈퇴하면 기존에 사용한 아이디는 재사용 및 복구가 불가능합니다.</p>
+                </div>
+                <br/>
+                <div class="row">
+                    <h6 style="font-weight: bold">회원 정보 및 개인 데이터 삭제</h6>
+                    <p>탈퇴 시 계정의 모든 정보는 삭제됩니다.</p>
+                </div>
+                <br/>
+                <div class="row">
+                    <h6 style="font-weight: bold">
+                        탈퇴하는 이유를 선택해주세요</h6>
+                    <ul class="list-reason">
+                        <li class="list-group-item">
+                            <input class="reason" type="radio" th:value="1" id="firstRadio">
+                            <label class="form-check-label" for="firstRadio">서비스를 사용하지 않아서</label>
+                        </li>
+                        <li class="list-group-item">
+                            <input class="reason" type="radio" th:value="2" id="secondRadio">
+                            <label class="form-check-label" for="secondRadio">이용하기 불편해서</label>
+                        </li>
+                        <li class="list-group-item">
+                            <input class="reason" type="radio" th:value="3" id="thirdRadio">
+                            <label class="form-check-label" for="thirdRadio">새로운 계정을 만들고 싶어서</label>
+                        </li>
+                        <li class="list-group-item">
+                            <input class="reason" type="radio" th:value="3" id="fourthRadio">
+                            <label class="form-check-label" for="fourthRadio">내가 찾는 모임이 없어서</label>
+                        </li>
+                        <li class="list-group-item">
+                            <input class="reason" type="radio" th:value="3" id="fifthRadio">
+                            <label class="form-check-label" for="fifthRadio">기타</label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-danger" id="deleteBtn" onclick="delMember()" disabled>탈퇴
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/mypage/myinfo.js"></script>
+</div>
+<div class="col-1"></div>
+</body>
+</html>

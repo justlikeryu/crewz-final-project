@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Modal -->
+<footer th:fragment="join">
+    <div class="modal fade" id="joinmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container d-flex justify-content-center" style="padding-bottom: 10px">
+                        <img src="/img/crewz.jpeg" style="width: 200px; height: 60px; text-align: center">
+                    </div>
+
+                    <div class="container d-flex justify-content-center" style="padding-bottom: 10px">
+                        <div style="font-size: 27px;">회원가입</div>
+                    </div>
+
+                    <form action="/member/join" method="post" name="form" id="form">
+                        <input type="hidden" name="site" value="null">
+                        <input type="hidden" name="photo" value="null">
+
+                        <div style="font-size: 12px;color: #fc4c4c;left:40px;position: relative">*모든 항목을 작성해 주세요.</div>
+
+                        <div class="container join">
+                            <input class="input-info" type="text" name="id" placeholder="아이디" autocomplete="off" oninput="checkId()"><br/>
+                            <span class="status" id="idStatus"></span>
+                        </div>
+                        <div class="container join">
+                            <input class="input-info" type="password" name="pwd" placeholder="비밀번호" autocomplete="off" oninput="checkPwd()">
+                        </div>
+                        <div class="container join">
+                            <input class="input-info" type="password" name="pwd2" placeholder="비밀번호 확인"
+                                   autocomplete="off" oninput="checkPwd()">
+                            <span class="status" id="pwdStatus"></span>
+                        </div>
+                        <div class="container join">
+                            <input class="input-info" type="text" name="name" placeholder="이름" autocomplete="off"
+                                   oninput="checkName()">
+                            <span class="status" id="nameStatus"></span>
+                        </div>
+                        <div class="container join">
+                            <input class="input-info" type="text" name="tel" placeholder="전화번호"
+                                   autocomplete="off" oninput="checkTel()">
+                            <span class="status" id="telStatus"></span>
+                        </div>
+                        <div class="container join">
+                            <input class="input-info" type="date" id="birth" name="birth" data-placeholder="생일"
+                                   onchange="checkBirth()"><br/>
+                        </div>
+
+                        <div class="container d-flex justify-content-center join">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" value="" id="check1">
+                                <label class="form-check-label" for="check1">
+                                    통합 서비스 이용약관 동의<br/>(필수)
+                                </label>
+                                <span id="checkboxStatus"></span>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" value="" id="check2">
+                                <label class="form-check-label" for="check2">
+                                    개인정보 이용<br/>(선택)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="container d-flex justify-content-center">
+                            <button id="joinBtn" type="submit" class="btn btn-danger" oninput="checkAll()"
+                                    onclick="join()" disabled>
+                                가입
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
